@@ -89,7 +89,6 @@ def writeToFile (threat_list, filename):
         f.writelines(threat_list)
         f.close()
 
-# TODO: FIX ME
 def createCSV():
     ''' Take each IP address for column 1 and source into column 2 '''
     # delete yesterdays outdated CSV
@@ -121,12 +120,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
 
