@@ -8,7 +8,7 @@ import sys
 import csv
 
 file_path = os.environ['HOME']+"/dev/threat_sources/"
-output_file = os.environ['HOME']+"/dev/threats.csv"
+output_file = "/Volumes/lookups/threats.csv"
 
 #Emerging Threats
 ethreat_blockedIP =        "http://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt"
@@ -91,9 +91,15 @@ def writeToFile (threat_list, filename):
 
 def createCSV():
     ''' Take each IP address for column 1 and source into column 2 '''
+    # Make sure the directory is mounted
+    if not os.path.isdir("/Volumes/lookups"):
+        print "\t [-] Output directory does not exist or is not mounted\n"
+        sys.exit()
+
     # delete yesterdays outdated CSV
     if os.path.isfile(output_file):
         os.remove(output_file)
+    
     f = open(output_file, 'w+')
     for hFile in os.listdir(file_path):
         with open(file_path+hFile) as infile:
