@@ -122,6 +122,7 @@ def main():
         writeToFile(threat_list, filename)
 
     # Create CSV for Splunk integration
+    print "[+] Creating CSV for Splunk integration\n"
     createCSV()
 
 if __name__ == "__main__":
