@@ -71,9 +71,9 @@ def urlgrab2 (host):
         elif hasattr(e, 'code'):
             print "\t [-] The server (%s) couldn't fulfill the requst.\n\t [-] Reason: %s" % (host, e.code)
             sys.exit()
-    finally:
-        threat_list = response.readlines()
-        return regex(threat_list)
+    
+    threat_list = response.readlines()
+    return regex(threat_list)
 
 
 def writeToFile (threat_list, filename):
