@@ -100,7 +100,10 @@ def createCSV():
     if os.path.isfile(output_file):
         os.remove(output_file)
     
+    # create header for first line
     f = open(output_file, 'w+')
+    f.write("IP,Threat_Feed\n")
+    
     for hFile in os.listdir(file_path):
         with open(file_path+hFile) as infile:
             for line in infile:
