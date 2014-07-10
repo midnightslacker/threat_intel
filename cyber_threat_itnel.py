@@ -31,6 +31,9 @@ palevo = "https://palevotracker.abuse.ch/blocklists.php?download=ipblocklist"
 #Malc0de Black List
 malcode = "http://malc0de.com/bl/IP_Blacklist.txt"
 
+# Malware Domain List - list of active ip addresses
+malwareDom = "http://www.malwaredomainlist.com/hostslist/ip.txt"
+
 open_source_threat_intel = {
     "malc0de_blacklist":malcode, 
     "palevo_ip_blocklist":palevo, 
@@ -39,7 +42,8 @@ open_source_threat_intel = {
     "emerging_threats_ip_blocklist":ethreat_blockedIP, 
     "emerging_threats_compromised_ips":ethreat_compromisedIP, 
     "emerging_threats_malvertisers":ethreat_RBN_malvertisers,
-    "emerging_threats_RBN_ips":ethreat_RBN_IP }
+    "emerging_threats_RBN_ips":ethreat_RBN_IP, 
+    "malware_domain_list_ips":malwareDom }
 
 # Simple IPv4 regex -- will include invalid IPs like 999.999.0.0 if they're in the file
 ip = re.compile(r'(?:[0-9]{1,3}\.){3}[0-9]{1,3}')
