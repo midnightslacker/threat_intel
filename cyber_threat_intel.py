@@ -123,7 +123,7 @@ def main():
         threat_list=urlgrab2(source, ip)
         writeToFile(file_path, threat_list, filename)
 
-    # Create CSV for Splunk integration
+    # Create CSV
     print "[+] Creating CSV. . .\n"
     createCSV(file_path, output_dir, output_file, "IP,Threat_Feed\n")
 
