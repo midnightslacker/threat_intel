@@ -1,14 +1,11 @@
 #!/usr/bin/env python
-import urllib
 import urllib2
-import gzip
 import re
 import os
 import sys
-import csv
 
 file_path = os.environ['HOME']+"/dev/threat_sources/"
-output_file = "/Volumes/lookups/threats.csv"
+output_file = os.environ['HOME']+"/.gvfs/lookups on tpappspl01/threats.csv"
 
 #Emerging Threats
 ethreat_blockedIP =        "http://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt"
@@ -16,52 +13,64 @@ ethreat_compromisedIP =    "http://rules.emergingthreats.net/blockrules/compromi
 ethreat_RBN_malvertisers = "http://doc.emergingthreats.net/pub/Main/RussianBusinessNetwork/emerging-rbn-malvertisers.txt"
 ethreat_RBN_IP =           "http://doc.emergingthreats.net/pub/Main/RussianBusinessNetwork/RussianBusinessNetworkIPs.txt"
 
-#AlienVault (needs to be gunzipped)
-alien = "https://reputation.alienvault.com/reputation.snort.gz"
+#AlienVault
+alien = "https://reputation.alienvault.com/reputation.generic"
 
 #Zeus Tracker
 zeus = "https://zeustracker.abuse.ch/blocklist.php?download=ipblocklist"
 
-#SpyEye
+#SpyEye Tracker
 spyEye = "https://spyeyetracker.abuse.ch/blocklist.php?download=ipblocklist"
 
 #Palevo Tracker
 palevo = "https://palevotracker.abuse.ch/blocklists.php?download=ipblocklist"
 
+#Feodo Tracker
+feodo = "https://feodotracker.abuse.ch/blocklist/?download=ipblocklist"
+
 #Malc0de Black List
 malcode = "http://malc0de.com/bl/IP_Blacklist.txt"
 
-# Malware Domain List - list of active ip addresses
+#Malware Domain List - list of active ip addresses
 malwareDom = "http://www.malwaredomainlist.com/hostslist/ip.txt"
 
+#OpenBL.org
+openBL = "http://www.openbl.org/lists/base.txt"
+
+#NoThink.org -- DNS
+ntDNS = "http://www.nothink.org/blacklist/blacklist_malware_dns.txt"
+
+#NoThink.org -- HTTP
+ntHTTP = "http://www.nothink.org/blacklist/blacklist_malware_http.txt"
+
+#NoThink.org -- IRC
+ntIRC = "http://www.nothink.org/blacklist/blacklist_malware_irc.txt"
+
 open_source_threat_intel = {
+    "AlienVault_blacklist":alien,
     "malc0de_blacklist":malcode, 
-    "palevo_ip_blocklist":palevo, 
-    "spyEye_ip_blocklist":spyEye, 
-    "zeus_tracker_ip_blocklist":zeus, 
-    "emerging_threats_ip_blocklist":ethreat_blockedIP, 
+    "palevo_ip_blacklist":palevo, 
+    "spyEye_ip_blacklist":spyEye, 
+    "zeus_tracker_ip_blacklist":zeus,
+    "feodo_black_list":feodo,
+    "emerging_threats_ip_blacklist":ethreat_blockedIP, 
     "emerging_threats_compromised_ips":ethreat_compromisedIP, 
     "emerging_threats_malvertisers":ethreat_RBN_malvertisers,
     "emerging_threats_RBN_ips":ethreat_RBN_IP, 
-    "malware_domain_list_ips":malwareDom }
+    "malware_domain_list_ips":malwareDom,
+    "open_blacklist":openBL,
+    "noThink_DNS_blacklist":ntDNS,
+    "noThink_HTTP_blacklist":ntHTTP,
+    "noThink_IRC_blacklist":ntIRC }
 
-# Simple IPv4 regex -- will include invalid IPs like 999.999.0.0 if they're in the file
-ip = re.compile(r'(?:[0-9]{1,3}\.){3}[0-9]{1,3}')
+# IP and Domain REGEX
+ip = re.compile('((?:(?:[12]\d?\d?|[1-9]\d|[1-9])\.){3}(?:[12]\d?\d?|[\d+]{1,2}))')
+domain = re.compile('([a-z0-9]+(?:[\-|\.][a-z0-9]+)*\.[a-z]{2,5}(?:[0-9]{1,5})?)')
 
 def regex(threat_list):
     ''' Grab only the IPs out of the file '''
     threat_intel = re.findall(ip, str(threat_list))
     return '\n'.join(threat_intel)
-
-
-def gzipURL (host, filename):
-    ''' Download OS threat intel source and gunzip it '''
-    urllib.urlretrieve(host, filename)
-    f = gzip.open(filename)
-    threat_list = f.readlines()
-    # remove gzipped file
-    os.remove(filename)
-    return regex(threat_list)
 
 def urlgrab2 (host):
     ''' Grab OS threat intel source from host '''
@@ -96,7 +105,7 @@ def writeToFile (threat_list, filename):
 def createCSV():
     ''' Take each IP address for column 1 and source into column 2 '''
     # Make sure the directory is mounted
-    if not os.path.isdir("/Volumes/lookups"):
+    if not os.path.isdir("/root/.gvfs/lookups on tpappspl01"):
         print "\t [-] Output directory does not exist or is not mounted\n"
         sys.exit()
 
@@ -115,11 +124,6 @@ def createCSV():
     f.close()
 
 def main():
-    # AlienVault is a special case because its gzipped
-    print "[+] Grabbing: " + str(alien)
-    alienVault = gzipURL(alien, "alien_vault_blacklist")
-    writeToFile(alienVault, "alien_vault_blacklist")
-
     # Loop through open source threat intelligence sources
     # Pull them down from the interwebs and format them
     # Write them to file.
