@@ -17,16 +17,10 @@ ethreat_RBN_IP =           "http://doc.emergingthreats.net/pub/Main/RussianBusin
 #AlienVault
 alien = "https://reputation.alienvault.com/reputation.generic"
 
-#Zeus Tracker
+#IP Trackers for known malware
 zeus = "https://zeustracker.abuse.ch/blocklist.php?download=ipblocklist"
-
-#SpyEye Tracker
 spyEye = "https://spyeyetracker.abuse.ch/blocklist.php?download=ipblocklist"
-
-#Palevo Tracker
 palevo = "https://palevotracker.abuse.ch/blocklists.php?download=ipblocklist"
-
-#Feodo Tracker
 feodo = "https://feodotracker.abuse.ch/blocklist/?download=ipblocklist"
 
 #Malc0de Black List
@@ -38,13 +32,9 @@ malwareDom = "http://www.malwaredomainlist.com/hostslist/ip.txt"
 #OpenBL.org
 openBL = "http://www.openbl.org/lists/base.txt"
 
-#NoThink.org -- DNS
+#NoThink.org -- DNS, HTTP and IRC
 ntDNS = "http://www.nothink.org/blacklist/blacklist_malware_dns.txt"
-
-#NoThink.org -- HTTP
 ntHTTP = "http://www.nothink.org/blacklist/blacklist_malware_http.txt"
-
-#NoThink.org -- IRC
 ntIRC = "http://www.nothink.org/blacklist/blacklist_malware_irc.txt"
 
 open_source_threat_intel = {
@@ -66,14 +56,13 @@ open_source_threat_intel = {
 
 # IP and Domain REGEX
 ip = re.compile('((?:(?:[12]\d?\d?|[1-9]\d|[1-9])\.){3}(?:[12]\d?\d?|[\d+]{1,2}))')
-domain = re.compile('([a-z0-9]+(?:[\-|\.][a-z0-9]+)*\.[a-z]{2,5}(?:[0-9]{1,5})?)')
 
-def regex(threat_list):
+def regex(threat_list, pattern):
     ''' Grab only the IPs out of the file '''
-    threat_intel = re.findall(ip, str(threat_list))
+    threat_intel = re.findall(pattern, str(threat_list))
     return '\n'.join(threat_intel)
 
-def urlgrab2 (host):
+def urlgrab2 (host, pattern):
     ''' Grab OS threat intel source from host '''
     req = urllib2.Request(host)
     try:
@@ -87,39 +76,39 @@ def urlgrab2 (host):
             sys.exit()
     
     threat_list = response.readlines()
-    return regex(threat_list)
+    return regex(threat_list, pattern)
 
 
-def writeToFile (threat_list, filename):
+def writeToFile (source_path, threat_list, filename):
     ''' Write updated threat intel to correct file and directory '''
     # check if file already exists, if it does, overwrite it. If the file doesn't exist, create it.
-    if os.path.isfile(file_path+filename):
-        f = open(file_path+filename, 'r+')
+    if os.path.isfile(source_path+filename):
+        f = open(source_path+filename, 'r+')
         f.writelines(threat_list)
         f.truncate()
         f.close()
     else:
-        f = open(file_path+filename, 'w+')
+        f = open(source_path+filename, 'w+')
         f.writelines(threat_list)
         f.close()
 
-def createCSV():
+def createCSV(source_path, directory, oFile, header):
     ''' Take each IP address for column 1 and source into column 2 '''
     # Make sure the directory is mounted
-    if not os.path.isdir(output_dir):
+    if not os.path.isdir(directory):
         print "\t [-] Output directory does not exist or is not mounted\n"
         sys.exit()
 
     # delete yesterdays outdated CSV
-    if os.path.isfile(output_file):
-        os.remove(output_file)
+    if os.path.isfile(oFile):
+        os.remove(oFile)
     
     # create header for first line
-    f = open(output_file, 'w+')
-    f.write("IP,Threat_Feed\n")
+    f = open(oFile, 'w+')
+    f.write(header)
     
-    for hFile in os.listdir(file_path):
-        with open(file_path+hFile) as infile:
+    for hFile in os.listdir(source_path):
+        with open(source_path+hFile) as infile:
             for line in infile:
                 f.write(line.rstrip()+","+hFile+"\n")
     f.close()
@@ -130,12 +119,12 @@ def main():
     # Write them to file.
     for filename, source in open_source_threat_intel.iteritems():
         print "[+] Grabbing: " + source
-        threat_list=urlgrab2(source)
-        writeToFile(threat_list, filename)
+        threat_list=urlgrab2(source, ip)
+        writeToFile(file_path, threat_list, filename)
 
     # Create CSV for Splunk integration
-    print "[+] Creating CSV for Splunk integration\n"
-    createCSV()
+    print "[+] Creating CSV. . .\n"
+    createCSV(file_path, output_dir, output_file, "IP,Threat_Feed\n")
 
 if __name__ == "__main__":
     main()
