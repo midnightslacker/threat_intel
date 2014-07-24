@@ -3,6 +3,7 @@ import urllib2
 import re
 import os
 import sys
+import threat_domains as td
 
 file_path = os.environ['HOME']+"/dev/threat_sources/"
 output_file = os.environ['HOME']+"/lookups/threats.csv"
@@ -58,12 +59,12 @@ open_source_threat_intel = {
 ip = re.compile('((?:(?:[12]\d?\d?|[1-9]\d|[1-9])\.){3}(?:[12]\d?\d?|[\d+]{1,2}))')
 
 def regex(threat_list, pattern):
-    ''' Grab only the IPs out of the file '''
+    ''' Filter pattern from threat_list '''
     threat_intel = re.findall(pattern, str(threat_list))
     return '\n'.join(threat_intel)
 
 def urlgrab2 (host, pattern):
-    ''' Grab OS threat intel source from host '''
+    ''' Grab threat intel from host '''
     req = urllib2.Request(host)
     try:
         response = urllib2.urlopen(host)
@@ -93,7 +94,7 @@ def writeToFile (source_path, threat_list, filename):
         f.close()
 
 def createCSV(source_path, directory, oFile, header):
-    ''' Take each IP address for column 1 and source into column 2 '''
+    ''' Create a two column csv file with threat and source for the columns '''
     # Make sure the directory is mounted
     if not os.path.isdir(directory):
         print "\t [-] Output directory does not exist or is not mounted\n"
@@ -125,6 +126,9 @@ def main():
     # Create CSV for Splunk integration
     print "[+] Creating CSV. . .\n"
     createCSV(file_path, output_dir, output_file, "IP,Threat_Feed\n")
+
+    # Now lets create a domain blacklist
+    td.main()
 
 if __name__ == "__main__":
     main()
