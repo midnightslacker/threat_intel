@@ -54,7 +54,7 @@ open_source_threat_intel = {
     "noThink_HTTP_blacklist":ntHTTP,
     "noThink_IRC_blacklist":ntIRC }
 
-# IP and Domain REGEX
+# Regular expression for IPv4 Addresses
 ip = re.compile('((?:(?:[12]\d?\d?|[1-9]\d|[1-9])\.){3}(?:[12]\d?\d?|[\d+]{1,2}))')
 
 def regex(threat_list, pattern):
