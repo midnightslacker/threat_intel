@@ -5,7 +5,8 @@ import os
 import sys
 
 file_path = os.environ['HOME']+"/dev/threat_sources/"
-output_file = os.environ['HOME']+"/.gvfs/lookups on tpappspl01/threats.csv"
+output_file = os.environ['HOME']+"/lookups/threats.csv"
+output_dir = os.environ['HOME']+"/lookups"
 
 #Emerging Threats
 ethreat_blockedIP =        "http://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt"
@@ -105,7 +106,7 @@ def writeToFile (threat_list, filename):
 def createCSV():
     ''' Take each IP address for column 1 and source into column 2 '''
     # Make sure the directory is mounted
-    if not os.path.isdir("/root/.gvfs/lookups on tpappspl01"):
+    if not os.path.isdir(output_dir):
         print "\t [-] Output directory does not exist or is not mounted\n"
         sys.exit()
 
