@@ -18,6 +18,8 @@ palevo      = "https://palevotracker.abuse.ch/blocklists.php?download=domainbloc
 ntDNS       = "http://www.nothink.org/blacklist/blacklist_malware_dns.txt"
 ntHTTP      = "http://www.nothink.org/blacklist/blacklist_malware_http.txt"
 ntIRC       = "http://www.nothink.org/blacklist/blacklist_malware_irc.txt"
+hpHosts     = "http://hosts-file.net/download/hosts.txt"
+# cyberCrime  = "http://cybercrime-tracker.net/all.php" TODO: Has a mix of IPs and domains, fix filter
 
 threat_domains = {
         "malware_domain_list":maldomlist,
@@ -29,7 +31,10 @@ threat_domains = {
         "palevo_domain_list":palevo,
         "noThink_malware_dns_domains":ntDNS,
         "noThink_malware_http_domains":ntHTTP,
-        "noThink_malware_IRC_domains":ntIRC }
+        "noThink_malware_IRC_domains":ntIRC,
+        "malwareBytes_hpHosts":hpHosts,
+        #"cyber_crime_tracker": cyberCrime 
+        }
 
 # Domain Regex
 domain = re.compile('([a-z0-9]+(?:[\-|\.][a-z0-9]+)*\.[a-z]{2,5}(?:[0-9]{1,5})?)')

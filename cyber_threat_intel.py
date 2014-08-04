@@ -18,7 +18,7 @@ ethreat_RBN_IP =           "http://doc.emergingthreats.net/pub/Main/RussianBusin
 #AlienVault
 alien = "https://reputation.alienvault.com/reputation.generic"
 
-#IP Trackers for known malware
+#Abuse.ch
 zeus = "https://zeustracker.abuse.ch/blocklist.php?download=ipblocklist"
 spyEye = "https://spyeyetracker.abuse.ch/blocklist.php?download=ipblocklist"
 palevo = "https://palevotracker.abuse.ch/blocklists.php?download=ipblocklist"
@@ -53,7 +53,8 @@ open_source_threat_intel = {
     "open_blacklist":openBL,
     "noThink_DNS_blacklist":ntDNS,
     "noThink_HTTP_blacklist":ntHTTP,
-    "noThink_IRC_blacklist":ntIRC }
+    "noThink_IRC_blacklist":ntIRC,
+    }
 
 # Regular expression for IPv4 Addresses
 ip = re.compile('((?:(?:[12]\d?\d?|[1-9]\d|[1-9])\.){3}(?:[12]\d?\d?|[\d+]{1,2}))')
