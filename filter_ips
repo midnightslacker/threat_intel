@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+
+import re
+import sys
+
+# IPv4 regex
+ip = re.compile('((?:(?:[12]\d?\d?|[1-9]\d|[1-9])\.){3}(?:[12]\d?\d?|[\d+]{1,2}))')
+
+input = str(sys.argv[1])
+output = str(sys.argv[2])
+
+def regex(input):
+    ''' Grab only the IPs out of the file '''
+    ip_list = re.findall(ip, str(input))
+    return '\n'.join(ip_list)
+
+
+file1 = open(input, 'r')
+text = file1.read()
+ip_list = regex(text)
+file1.close()
+
+file2 = open(output, 'w')
+file2.write(str(ip_list))
+file2.close()
+
+
+
+
