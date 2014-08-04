@@ -1,4 +1,4 @@
 threat_intel
 ============
 
-Python program that grabs open-source cyber threat intelligence and formats it into a CSV
+This repo is used to gather open source cyber threat intelligence feeds.
