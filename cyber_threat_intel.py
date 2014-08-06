@@ -38,6 +38,41 @@ ntDNS = "http://www.nothink.org/blacklist/blacklist_malware_dns.txt"
 ntHTTP = "http://www.nothink.org/blacklist/blacklist_malware_http.txt"
 ntIRC = "http://www.nothink.org/blacklist/blacklist_malware_irc.txt"
 
+#Blocklist.de
+blockList = "http://www.blocklist.de/lists/all.txt"
+
+#Dragon Research Group
+DRG_vncProbe = "https://www.dragonresearchgroup.org/insight/vncprobe.txt"
+DRG_http = "https://www.dragonresearchgroup.org/insight/http-report.txt"
+DRG_ssh = "https://www.dragonresearchgroup.org/insight/sshpwauth.txt"
+
+#infiltrated.net
+infiltrate = "http://www.infiltrated.net/blacklisted"
+
+#Project Honey Pot
+honey_pot = "http://www.projecthoneypot.org/list_of_ips.php?rss=1"
+
+#CI Army
+ci_army = "http://www.ciarmy.com/list/ci-badguys.txt"
+
+#danger.rules.sk
+danger_rules = "http://danger.rulez.sk/projects/bruteforceblocker/blist.php"
+
+#SANS
+sans_ip = "https://isc.sans.edu/ipsascii.html"
+
+#packetmail.net
+packet_mail_ip = "https://www.packetmail.net/iprep.txt"
+
+#autoshun.org
+autoshun = "http://www.autoshun.org/files/shunlist.csv"
+
+#charles.the-haleys.org -- SSH dictionary attack
+ssh_dict_attack = "http://charles.the-haleys.org/ssh_dico_attack_hdeny_format.php/hostsdeny.txt"
+
+#virbl.org
+virbl_dns_blacklist = "http://virbl.org/download/virbl.dnsbl.bit.nl.txt"
+
 open_source_threat_intel = {
     "AlienVault_blacklist":alien,
     "malc0de_blacklist":malcode, 
@@ -54,6 +89,19 @@ open_source_threat_intel = {
     "noThink_DNS_blacklist":ntDNS,
     "noThink_HTTP_blacklist":ntHTTP,
     "noThink_IRC_blacklist":ntIRC,
+    "fail2ban":blockList,
+    "DRG_vncProbe":DRG_vncProbe,
+    "DRG_http":DRG_http,
+    "DRG_ssh":DRG_ssh,
+    "infiltrate_blacklist":infiltrate,
+    "project_honey_pot":honey_pot,
+    "ci_army":ci_army,
+    "danger_rules":danger_rules,
+    "isc_SANS":sans_ip,
+    "packet_mail":packet_mail_ip,
+    "autoshun":autoshun,
+    "ssh_bruteforce":ssh_dict_attack,
+    "virbl_dns_blacklist":virbl_dns_blacklist,
     }
 
 # Regular expression for IPv4 Addresses

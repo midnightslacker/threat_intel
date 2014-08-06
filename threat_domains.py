@@ -19,6 +19,7 @@ ntDNS       = "http://www.nothink.org/blacklist/blacklist_malware_dns.txt"
 ntHTTP      = "http://www.nothink.org/blacklist/blacklist_malware_http.txt"
 ntIRC       = "http://www.nothink.org/blacklist/blacklist_malware_irc.txt"
 hpHosts     = "http://hosts-file.net/download/hosts.txt"
+# malwareURLs = "http://malwareurls.joxeankoret.com/normal.txt"
 # cyberCrime  = "http://cybercrime-tracker.net/all.php" TODO: Has a mix of IPs and domains, fix filter
 
 threat_domains = {
@@ -33,6 +34,7 @@ threat_domains = {
         "noThink_malware_http_domains":ntHTTP,
         "noThink_malware_IRC_domains":ntIRC,
         "malwareBytes_hpHosts":hpHosts,
+        #"malwareURLs":malwareURLs,
         #"cyber_crime_tracker": cyberCrime 
         }
 
