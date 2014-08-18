@@ -75,7 +75,6 @@ virbl_dns_blacklist = "http://virbl.org/download/virbl.dnsbl.bit.nl.txt"
 
 #TOR  nodes
 tor_exit_nodes = "https://check.torproject.org/exit-addresses"
-# tor = "https://cydef.us/torexit.txt"
 
 open_source_threat_intel = {
     "AlienVault_blacklist":alien,
