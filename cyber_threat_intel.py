@@ -73,6 +73,10 @@ ssh_dict_attack = "http://charles.the-haleys.org/ssh_dico_attack_hdeny_format.ph
 #virbl.org
 virbl_dns_blacklist = "http://virbl.org/download/virbl.dnsbl.bit.nl.txt"
 
+#TOR  nodes
+tor_exit_nodes = "https://check.torproject.org/exit-addresses"
+# tor = "https://cydef.us/torexit.txt"
+
 open_source_threat_intel = {
     "AlienVault_blacklist":alien,
     "malc0de_blacklist":malcode, 
@@ -102,6 +106,7 @@ open_source_threat_intel = {
     "autoshun":autoshun,
     "ssh_bruteforce":ssh_dict_attack,
     "virbl_dns_blacklist":virbl_dns_blacklist,
+    "tor_exit_nodes":tor_exit_nodes,
     }
 
 # Regular expression for IPv4 Addresses
