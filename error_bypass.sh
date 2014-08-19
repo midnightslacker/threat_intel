@@ -3,7 +3,7 @@
 # malwareBytes hpHosts
 echo 'Grabbing malwareBytes Hosts.txt'
 curl -o ./hosts.txt http://hosts-file.net/download/hosts.txt
-grep 127\.0\.0\.1 hosts.txt | sed -e "1d" | sed -e 's/127\.0\.0\.1[\t]//g' > $HOME/dev/threat_domains/malwareBytes_hpHosts
+grep 127\.0\.0\.1 hosts.txt | sed -e "1d" | sed -e 's/127\.0\.0\.1[\t]//g' | sed -e 's/googletag//g' > $HOME/dev/threat_domains/malwareBytes_hpHosts
 rm -f ./hosts.txt
 
 # tor nodes
