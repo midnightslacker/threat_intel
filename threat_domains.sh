@@ -15,10 +15,10 @@ grep -v "#" update_hosts.txt | sed -e 's/127\.0\.0\.1[\t]//g' > $HOME/dev/threat
 rm -f ./update_hosts.txt
 
 # Malware Domains List
-# grab everything but comment lines | remove 127.0.0.1 | remove line containing localhost | remove whitespace | remove first 2 empty lines
+# grab everything but comment lines | remove 127.0.0.1 | remove whitespace | remove first 3 lines
 echo '[+] Grabbing malware domain list'
 curl -o malware_domains_list http://www.malwaredomainlist.com/hostslist/hosts.txt
-grep -v '#' malware_domains_list | sed -e 's/127\.0\.0\.1//g' | grep -v localhost | sed -e 's/^ *//g' | tail -n +3  > $HOME/dev/threat_domains/malware_domains_list
+grep -v "#" malware_domains_list | sed -e 's/127\.0\.0\.1//g' | sed -e 's/^ *//g' | tail -n +4 > $HOME/dev/threat_domains/malware_domains_list
 rm -f malware_domains_list
 
 # Malware Domains
