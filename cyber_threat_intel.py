@@ -5,9 +5,15 @@ import os
 import sys
 import threat_domains as td
 
+#IPs
+
 file_path = os.environ['HOME']+"/dev/threat_sources/"
 output_file = os.environ['HOME']+"/lookups/threats.csv"
 output_dir = os.environ['HOME']+"/lookups"
+
+#Domains
+domain_path = os.environ['HOME']+"/dev/threat_domains/"
+domain_output = os.environ['HOME']+"/lookups/threat_domains.csv"
 
 #Emerging Threats
 ethreat_blockedIP =        "http://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt"
@@ -180,8 +186,8 @@ def main():
     print "[+] Creating CSV. . .\n"
     createCSV(file_path, output_dir, output_file, "IP,Threat_Feed\n")
 
-    # Now lets create a domain blacklist
-    td.main()
+    # Now lets create a domain blacklist -- sources are handled by bash script
+    createCSV(domain_path, output_dir, domain_output, "Domain, Threat_Feed\n")
 
 if __name__ == "__main__":
     main()
