@@ -6,7 +6,6 @@ import sys
 import threat_domains as td
 
 #IPs
-
 file_path = os.environ['HOME']+"/dev/threat_sources/"
 output_file = os.environ['HOME']+"/lookups/threats.csv"
 output_dir = os.environ['HOME']+"/lookups"
