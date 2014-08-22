@@ -3,7 +3,6 @@ import urllib2
 import re
 import os
 import sys
-import threat_domains as td
 
 #IPs
 file_path = os.environ['HOME']+"/dev/threat_sources/"
