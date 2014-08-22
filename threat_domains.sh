@@ -28,6 +28,12 @@ curl -o ./malware_domains http://mirror1.malwaredomains.com/files/domains.txt
 cut -d$'\t' -f3 ./malware_domains | awk 'NF' | grep -E -v "notice|domain" > $HOME/dev/threat_domains/malware_domains
 rm -f ./malware_domains
 
+# More Malware Domains
+echo '[+] Grabbing malware_urls'
+curl -o malware_urls http://malwareurls.joxeankoret.com/domains.txt
+grep -v "#" malware_urls | tail -n +2 > $HOME/dev/threat_domains/malware_urls
+rm -f malware_urls
+
 # DShield
 # remove empty lines | give me everything that isn't a comment | remove the line with the word Site
 echo '[+] Grabbing DShield threat feed'
