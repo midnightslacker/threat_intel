@@ -73,7 +73,7 @@ curl -k -o ./tor_nodes https://www.dan.me.uk/torlist/
 python $HOME/bin/filter_ips ./tor_nodes $HOME/dev/threat_sources/tor_nodes
 rm -f ./tor_nodes
 
-# ssl blacklist -- Currently offline
+# ssl blacklist
 echo '[+] Grabbing ssl blacklist' 
 curl -k -o ./ssl_blacklist  https://sslbl.abuse.ch/blacklist/sslipblacklist.rules
 python $HOME/bin/filter_ips ./ssl_blacklist $HOME/dev/threat_sources/ssl_blacklist
