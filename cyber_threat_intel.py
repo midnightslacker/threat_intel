@@ -3,6 +3,7 @@ import urllib2
 import re
 import os
 import sys
+import shutil
 
 #IPs
 file_path = os.environ['HOME']+"/dev/threat_sources/"
@@ -157,8 +158,9 @@ def createCSV(source_path, directory, oFile, header):
         print "\t [-] Output directory does not exist or is not mounted\n"
         sys.exit()
 
-    # delete yesterdays outdated CSV
+    # copy old file for diff--then remove to create new file
     if os.path.isfile(oFile):
+        shutil.copyfile(oFile, oFile+".old")
         os.remove(oFile)
     
     # create header for first line
