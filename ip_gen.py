@@ -4,8 +4,8 @@ from netaddr import IPNetwork
 from netaddr import iter_iprange
 
 parser = OptionParser('usage %prog -i --cidr '+'<IP cidr range>')
-parser.add_option('-i', '--cidr', dest='ip_cidr', type='string', help='specify IPv4 cidr range (i.e. 192.168.1.1/23)')
-parser.add_option('-r', '--range', dest='ip_range', type='string', help='specify IPv4 range (i.e. 192.168.1.1-198.162.1.24')
+parser.add_option('-i', '--cidr', dest='ip_cidr', type='string', help='specify IPv4 cidr range 192.168.1.1/23')
+parser.add_option('-r', '--range', dest='ip_range', type='string', help='specify IPv4 range 192.168.1.1-198.162.1.24')
 
 (options, args) = parser.parse_args()
 
