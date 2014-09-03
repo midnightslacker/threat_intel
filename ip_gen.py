@@ -12,10 +12,6 @@ parser.add_option('-r', '--range', dest='ip_range', type='string', help='specify
 ip_cidr  = options.ip_cidr
 ip_range = options.ip_range
 
-if (ip_cidr == None) and (ip_range == None):
-    print parser.usage
-    exit(0)
-
 def cidr():
     for ip in IPNetwork(ip_cidr):
         print ('%s' % ip)
