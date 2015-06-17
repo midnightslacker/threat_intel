@@ -14,20 +14,20 @@ output_dir = os.environ['HOME']+"/lookups"
 domain_path = os.environ['HOME']+"/dev/threat_domains/"
 domain_output = os.environ['HOME']+"/lookups/threat_domains.csv"
 
-#Emerging Threats
-ethreat_blockedIP =        "http://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt"
-ethreat_compromisedIP =    "http://rules.emergingthreats.net/blockrules/compromised-ips.txt"
-ethreat_RBN_malvertisers = "http://doc.emergingthreats.net/pub/Main/RussianBusinessNetwork/emerging-rbn-malvertisers.txt"
-ethreat_RBN_IP =           "http://doc.emergingthreats.net/pub/Main/RussianBusinessNetwork/RussianBusinessNetworkIPs.txt"
-
 #AlienVault
 alien = "https://reputation.alienvault.com/reputation.generic"
 
 #Abuse.ch
 zeus = "https://zeustracker.abuse.ch/blocklist.php?download=ipblocklist"
-spyEye = "https://spyeyetracker.abuse.ch/blocklist.php?download=ipblocklist"
 palevo = "https://palevotracker.abuse.ch/blocklists.php?download=ipblocklist"
 feodo = "https://feodotracker.abuse.ch/blocklist/?download=ipblocklist"
+
+#Emerging Threats
+
+ethreat_blockedIP =        "http://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt"
+ethreat_compromisedIP =    "http://rules.emergingthreats.net/blockrules/compromised-ips.txt"
+ethreat_RBN_malvertisers = "http://doc.emergingthreats.net/pub/Main/RussianBusinessNetwork/emerging-rbn-malvertisers.txt"
+ethreat_RBN_IP =           "http://doc.emergingthreats.net/pub/Main/RussianBusinessNetwork/RussianBusinessNetworkIPs.txt"
 
 #Malc0de Black List
 malcode = "http://malc0de.com/bl/IP_Blacklist.txt"
@@ -50,9 +50,6 @@ blockList = "http://www.blocklist.de/lists/all.txt"
 DRG_vncProbe = "https://www.dragonresearchgroup.org/insight/vncprobe.txt"
 DRG_http = "https://www.dragonresearchgroup.org/insight/http-report.txt"
 DRG_ssh = "https://www.dragonresearchgroup.org/insight/sshpwauth.txt"
-
-#infiltrated.net
-infiltrate = "http://www.infiltrated.net/blacklisted"
 
 #Project Honey Pot
 honey_pot = "http://www.projecthoneypot.org/list_of_ips.php?rss=1"
@@ -81,17 +78,22 @@ virbl_dns_blacklist = "http://virbl.org/download/virbl.dnsbl.bit.nl.txt"
 #TOR  nodes
 tor_exit_nodes = "https://check.torproject.org/exit-addresses"
 
+#osint.bambenekconuslting.com
+osint_iplist = "http://osint.bambenekconsulting.com/feeds/c2-ipmasterlist.txt"
+
+#TALOS IP Blacklist
+talos_blacklist = "http://talosintel.com/files/additional_resources/ips_blacklist/ip-filter.blf"
+
 open_source_threat_intel = {
     "AlienVault_blacklist":alien,
     "malc0de_blacklist":malcode, 
-    "palevo_ip_blacklist":palevo, 
-    "spyEye_ip_blacklist":spyEye, 
+    "palevo_ip_blacklist":palevo,  
     "zeus_tracker_ip_blacklist":zeus,
     "feodo_black_list":feodo,
-    "emerging_threats_ip_blacklist":ethreat_blockedIP, 
-    "emerging_threats_compromised_ips":ethreat_compromisedIP, 
+    "emerging_threats_ip_blacklist":ethreat_blockedIP,
+    "emerging_threats_compromised_ips":ethreat_compromisedIP,
     "emerging_threats_malvertisers":ethreat_RBN_malvertisers,
-    "emerging_threats_RBN_ips":ethreat_RBN_IP, 
+    "emerging_threats_RBN_ips":ethreat_RBN_IP,
     "malware_domain_list_ips":malwareDom,
     "open_blacklist":openBL,
     "noThink_DNS_blacklist":ntDNS,
@@ -101,7 +103,6 @@ open_source_threat_intel = {
     "DRG_vncProbe":DRG_vncProbe,
     "DRG_http":DRG_http,
     "DRG_ssh":DRG_ssh,
-    "infiltrate_blacklist":infiltrate,
     "project_honey_pot":honey_pot,
     "ci_army":ci_army,
     "danger_rules":danger_rules,
@@ -111,6 +112,8 @@ open_source_threat_intel = {
     "ssh_bruteforce":ssh_dict_attack,
     "virbl_dns_blacklist":virbl_dns_blacklist,
     "tor_exit_nodes":tor_exit_nodes,
+    "osint_iplist":osint_iplist,
+	"talos_blacklist":talos_blacklist
     }
 
 # Regular expression for IPv4 Addresses
@@ -128,7 +131,7 @@ def urlgrab2 (host, pattern):
         response = urllib2.urlopen(host)
     except urllib2.URLError as e:
         if hasattr(e, 'reason'):
-            print "\t [-] Failed to reach " + str(host) +"\n\t [-] Reason: ", e.reason +"\n"
+            print "\t [-] Failed to reach " + str(host) +"\n\t [-] Reason: ", str(e.reason) +"\n"
             sys.exit()
         elif hasattr(e, 'code'):
             print "\t [-] The server (%s) couldn't fulfill the requst.\n\t [-] Reason: %s" % (host, e.code)

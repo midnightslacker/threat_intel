@@ -22,10 +22,10 @@ grep -v "#" malware_domains_list | sed -e 's/127\.0\.0\.1//g' | sed -e 's/^ *//g
 rm -f malware_domains_list
 
 # Malware Domains
-# use tab as deliminiter and return field 3 | remove whitespace | remove lines with notice or domain 
+# use tab as deliminiter and return field 3 | remove whitespace | remove lines with notice or domain | remove 'legit' advertisers 
 echo '[+] Grabbing malware domains '
 curl -o ./malware_domains http://mirror1.malwaredomains.com/files/domains.txt
-cut -d$'\t' -f3 ./malware_domains | awk 'NF' | grep -E -v "notice|domain" > $HOME/dev/threat_domains/malware_domains
+cut -d$'\t' -f3 ./malware_domains | awk 'NF' | grep -E -v "notice|domain" | grep -E -v "collective-media.net|tlvmedia.com" > $HOME/dev/threat_domains/malware_domains
 rm -f ./malware_domains
 
 # More Malware Domains
@@ -53,17 +53,17 @@ curl -o palevo_tracker https://palevotracker.abuse.ch/blocklists.php?download=do
 awk 'NF' palevo_tracker | grep -v "#" > $HOME/dev/threat_domains/palevo_tracker
 rm -f palevo_tracker
 
-# SpyEye
-echo '[+] Grabbing SpyEye Tracker'
-curl -o spyeye_tracker https://spyeyetracker.abuse.ch/blocklist.php?download=domainblocklist
-awk 'NF' spyeye_tracker | grep -v "#" > $HOME/dev/threat_domains/spyeye_tracker
-rm -f spyeye_tracker
-
 # Zeus
 echo '[+] Grabbing Zeus Tracker'
 curl -o zeus_tracker https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
 awk 'NF' zeus_tracker | grep -v "#" > $HOME/dev/threat_domains/zeus_tracker
 rm -f zeus_tracker
+
+# OSINT bambenekconsulting
+echo '[+] Grabbing Bambenek OSINT'
+curl -o osint_domainslist http://osint.bambenekconsulting.com/feeds/c2-dommasterlist.txt
+awk 'NF' osint_domainslist | grep -v "#" | cut -d$',' -f1 > $HOME/dev/threat_domains/osint_domainslist
+rm -f osint_domainstlist
 
 ############################################################################################
 
@@ -78,3 +78,9 @@ echo '[+] Grabbing ssl blacklist'
 curl -k -o ./ssl_blacklist  https://sslbl.abuse.ch/blacklist/sslipblacklist.rules
 python $HOME/bin/filter_ips ./ssl_blacklist $HOME/dev/threat_sources/ssl_blacklist
 rm -f ./ssl_blacklist
+
+# spamhaus DROP list
+echo '[+] Grabbing Emerging Threats Spamhaus DROP List'
+curl -k -o ./spamhaus_droplist http://rules.emergingthreats.net/fwrules/emerging-PIX-DROP.rules
+awk 'NF' spamhaus_droplist | grep -v "#" | cut -d$' ' -f5 > $HOME/dev/threat_sources/spamhaus_droplist
+rm -f ./spamhaus_droplist
