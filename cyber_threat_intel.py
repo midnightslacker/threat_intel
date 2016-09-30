@@ -23,10 +23,8 @@ palevo = "https://palevotracker.abuse.ch/blocklists.php?download=ipblocklist"
 feodo = "https://feodotracker.abuse.ch/blocklist/?download=ipblocklist"
 
 #Emerging Threats
-<<<<<<< HEAD
 =======
 ethreat_blockedIP =        "http://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt"
->>>>>>> 2df56d097b19efc0e8f29b2646e535791d56168f
 ethreat_compromisedIP =    "http://rules.emergingthreats.net/blockrules/compromised-ips.txt"
 ethreat_RBN_malvertisers = "http://doc.emergingthreats.net/pub/Main/RussianBusinessNetwork/emerging-rbn-malvertisers.txt"
 
