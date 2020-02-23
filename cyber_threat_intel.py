@@ -1,18 +1,43 @@
-#!/usr/bin/env python
+'''
+Author: @midnightslacker
+Date: 02/22/2020
+Description: Open source threat intelligence feeds aggregator. 
+             Output to file and create a csv for SIEM ingestion.     
+'''
+
+#!/usr/bin/env python3
 import urllib2
+import requests
 import re
 import os
 import sys
 import shutil
 
+'''
+# SOURCES NO LONGER AVAILABLE
+    DRG_vncProbe = "https://www.dragonresearchgroup.org/insight/vncprobe.txt"
+    DRG_http = "https://www.dragonresearchgroup.org/insight/http-report.txt"
+    DRG_ssh = "https://www.dragonresearchgroup.org/insight/sshpwauth.txt"
+    virbl_dns_blacklist = "http://virbl.org/download/virbl.dnsbl.bit.nl.txt"
+    talos_blacklist = "http://www.talosintel.com/feeds/ip-filter.blf"
+    packet_mail_ip = "https://www.packetmail.net/iprep.txt"
+    packet_mail_ET = "https://www.packetmail.net/iprep_emerging_ips.txt"
+    blockList = "http://www.blocklist.de/lists/all.txt"
+    angler = "http://www.beerandraptors.com/dontcrawlmebro/angler_ips"
+'''
+
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B179 Safari/7534.48.3',
+}
+
 #IPs
-file_path = os.environ['HOME']+"/dev/threat_sources/"
-output_file = os.environ['HOME']+"/lookups/threats.csv"
-output_dir = os.environ['HOME']+"/lookups/"
+file_path = os.environ['HOME']+"/dev/output/threat_sources/"
+output_file = os.environ['HOME']+"/dev/output/threats.csv"
+output_dir = os.environ['HOME']+"/dev/output/"
 
 #Domains
-domain_path = os.environ['HOME']+"/dev/threat_domains/"
-domain_output = os.environ['HOME']+"/lookups/threat_domains.csv"
+domain_path = os.environ['HOME']+"/dev/output/threat_domains/"
+domain_output = os.environ['HOME']+"/dev/output/threat_domains.csv"
 
 #AlienVault
 alien = "https://reputation.alienvault.com/reputation.generic"
@@ -23,7 +48,6 @@ palevo = "https://palevotracker.abuse.ch/blocklists.php?download=ipblocklist"
 feodo = "https://feodotracker.abuse.ch/blocklist/?download=ipblocklist"
 
 #Emerging Threats
-=======
 ethreat_blockedIP =        "http://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt"
 ethreat_compromisedIP =    "http://rules.emergingthreats.net/blockrules/compromised-ips.txt"
 ethreat_RBN_malvertisers = "http://doc.emergingthreats.net/pub/Main/RussianBusinessNetwork/emerging-rbn-malvertisers.txt"
@@ -35,17 +59,8 @@ malcode = "http://malc0de.com/bl/IP_Blacklist.txt"
 openBL = "http://www.openbl.org/lists/base.txt"
 
 #NoThink.org -- DNS, HTTP and IRC
-ntDNS = "http://www.nothink.org/blacklist/blacklist_malware_dns.txt"
-ntHTTP = "http://www.nothink.org/blacklist/blacklist_malware_http.txt"
-ntIRC = "http://www.nothink.org/blacklist/blacklist_malware_irc.txt"
-
-#Blocklist.de
-blockList = "http://www.blocklist.de/lists/all.txt"
-
-#Dragon Research Group
-DRG_vncProbe = "https://www.dragonresearchgroup.org/insight/vncprobe.txt"
-DRG_http = "https://www.dragonresearchgroup.org/insight/http-report.txt"
-DRG_ssh = "https://www.dragonresearchgroup.org/insight/sshpwauth.txt"
+ntTelnet = "http://www.nothink.org/honeypots/honeypot_telnet_blacklist_2019.txt"
+ntSSH = "http://www.nothink.org/honeypots/honeypot_ssh_blacklist_2019.txt"
 
 #Project Honey Pot
 honey_pot = "http://www.projecthoneypot.org/list_of_ips.php?rss=1"
@@ -59,18 +74,11 @@ danger_rules = "http://danger.rulez.sk/projects/bruteforceblocker/blist.php"
 #SANS
 sans_ip = "https://isc.sans.edu/ipsascii.html"
 
-#packetmail.net
-packet_mail_ip = "https://www.packetmail.net/iprep.txt"
-packet_mail_ET = "https://www.packetmail.net/iprep_emerging_ips.txt"
-
 #autoshun.org
 autoshun = "http://www.autoshun.org/files/shunlist.csv"
 
 #charles.the-haleys.org -- SSH dictionary attack
 ssh_dict_attack = "http://charles.the-haleys.org/ssh_dico_attack_hdeny_format.php/hostsdeny.txt"
-
-#virbl.org
-virbl_dns_blacklist = "http://virbl.org/download/virbl.dnsbl.bit.nl.txt"
 
 #TOR  nodes
 tor_exit_nodes = "https://check.torproject.org/exit-addresses"
@@ -78,11 +86,6 @@ tor_exit_nodes = "https://check.torproject.org/exit-addresses"
 #osint.bambenekconuslting.com
 osint_iplist = "http://osint.bambenekconsulting.com/feeds/c2-ipmasterlist.txt"
 
-#TALOS IP Blacklist
-#talos_blacklist = "http://www.talosintel.com/feeds/ip-filter.blf"
-
-#Angler IPs
-angler = "http://www.beerandraptors.com/dontcrawlmebro/angler_ips"
 
 open_source_threat_intel = {
     "AlienVault_blacklist":alien,
@@ -92,26 +95,25 @@ open_source_threat_intel = {
     "feodo_black_list":feodo,
     "emerging_threats_compromised_ips":ethreat_compromisedIP,
     "emerging_threats_malvertisers":ethreat_RBN_malvertisers,
-    "open_blacklist":openBL,
-    "noThink_DNS_blacklist":ntDNS,
-    "noThink_HTTP_blacklist":ntHTTP,
-    "noThink_IRC_blacklist":ntIRC,
-    "fail2ban":blockList,
-    "DRG_vncProbe":DRG_vncProbe,
-    "DRG_http":DRG_http,
-    "DRG_ssh":DRG_ssh,
+    "noThink_SSH_blacklist":ntSSH,
+    "noThink_Telnet_blacklist":ntTelnet,
     "ci_army":ci_army,
     "danger_rules":danger_rules,
     "isc_SANS":sans_ip,
-    "packet_mail":packet_mail_ip,
-	"packet_mail":packet_mail_ET,
     "autoshun":autoshun,
     "ssh_bruteforce":ssh_dict_attack,
-    "virbl_dns_blacklist":virbl_dns_blacklist,
     "tor_exit_nodes":tor_exit_nodes,
-    "osint_iplist":osint_iplist,
+    "osint_iplist":osint_iplist
+#   "angler_ip":angler
 #	"talos_blacklist":talos_blacklist,
-	"angler_ip":angler
+#   "DRG_vncProbe":DRG_vncProbe,
+#   "DRG_http":DRG_http,
+#   "DRG_ssh":DRG_ssh,
+#   "virbl_dns_blacklist":virbl_dns_blacklist,
+#   "open_blacklist":openBL,
+#   "packet_mail":packet_mail_ip,
+#	"packet_mail":packet_mail_ET,
+#   "fail2ban":blockList,
     }
 
 # Regular expression for IPv4 Addresses
@@ -122,21 +124,19 @@ def regex(threat_list, pattern):
     threat_intel = re.findall(pattern, str(threat_list))
     return '\n'.join(threat_intel)
 
-def urlgrab2 (host, pattern):
+def urlgrab (host, pattern):
     ''' Grab threat intel from host '''
-    req = urllib2.Request(host)
     try:
-        response = urllib2.urlopen(host)
-    except urllib2.URLError as e:
-        if hasattr(e, 'reason'):
-            print "\t [-] Failed to reach " + str(host) +"\n\t [-] Reason: ", str(e.reason) +"\n"
-            sys.exit()
-        elif hasattr(e, 'code'):
-            print "\t [-] The server (%s) couldn't fulfill the requst.\n\t [-] Reason: %s" % (host, e.code)
-            sys.exit()
-    
-    threat_list = response.readlines()
-    return regex(threat_list, pattern)
+        response = requests.get(host, headers=HEADERS, timeout=5)
+        response.raise_for_status()
+        threat_list = response.content
+        return regex(threat_list, pattern)
+    except requests.exceptions.HTTPError as err:
+        print(err)
+        sys.exit(1)
+    except requests.exceptions.RequestException as e:
+        print(e)
+        sys.exit(1)
 
 
 def writeToFile (source_path, threat_list, filename):
@@ -179,12 +179,12 @@ def main():
     # Pull them down from the interwebs and format them
     # Write them to file.
     for filename, source in open_source_threat_intel.iteritems():
-        print "[+] Grabbing: " + source
-        threat_list=urlgrab2(source, ip)
+        print("[+] Grabbing: " + source)
+        threat_list=urlgrab(source, ip)
         writeToFile(file_path, threat_list, filename)
 
     # Create CSV
-    print "[+] Creating CSV. . .\n"
+    print("[+] Creating CSV. . .\n")
     createCSV(file_path, output_dir, output_file, "IP,Threat_Feed\n")
 
     # Now lets create a domain blacklist -- sources are handled by bash script
