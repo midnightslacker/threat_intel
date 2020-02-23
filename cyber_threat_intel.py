@@ -137,7 +137,6 @@ def urlgrab (host, pattern):
         print(e)
         sys.exit(1)
 
-
 def writeToFile (source_path, threat_list, filename):
     ''' Write updated threat intel to correct file and directory '''
     # check if file already exists, if it does, overwrite it. If the file doesn't exist, create it.
