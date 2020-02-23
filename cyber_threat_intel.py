@@ -6,7 +6,6 @@ Description: Open source threat intelligence feeds aggregator.
 '''
 
 #!/usr/bin/env python3
-import urllib2
 import requests
 import re
 import os
