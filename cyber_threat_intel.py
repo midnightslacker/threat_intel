@@ -103,16 +103,6 @@ open_source_threat_intel = {
     "ssh_bruteforce":ssh_dict_attack,
     "tor_exit_nodes":tor_exit_nodes,
     "osint_iplist":osint_iplist
-#   "angler_ip":angler
-#	"talos_blacklist":talos_blacklist,
-#   "DRG_vncProbe":DRG_vncProbe,
-#   "DRG_http":DRG_http,
-#   "DRG_ssh":DRG_ssh,
-#   "virbl_dns_blacklist":virbl_dns_blacklist,
-#   "open_blacklist":openBL,
-#   "packet_mail":packet_mail_ip,
-#	"packet_mail":packet_mail_ET,
-#   "fail2ban":blockList,
     }
 
 # Regular expression for IPv4 Addresses
