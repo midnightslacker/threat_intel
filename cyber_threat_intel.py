@@ -1,8 +1,8 @@
 '''
-Author: @midnightslacker
-Date: 02/22/2020
-Description: Open source threat intelligence feeds aggregator. 
-             Output to file and create a csv for SIEM ingestion.     
+Author:         @midnightslacker
+Last Updatee:   08/10/2021
+Description:    Open source threat intelligence feeds aggregator.
+                Output to file and create a csv for SIEM ingestion.
 '''
 
 #!/usr/bin/env python3
@@ -23,6 +23,9 @@ import shutil
     packet_mail_ET = "https://www.packetmail.net/iprep_emerging_ips.txt"
     blockList = "http://www.blocklist.de/lists/all.txt"
     angler = "http://www.beerandraptors.com/dontcrawlmebro/angler_ips"
+    http://doc.emergingthreats.net/pub/Main/RussianBusinessNetwork/emerging-rbn-malvertisers.txt"
+    osint_iplist = "http://osint.bambenekconsulting.com/feeds/c2-ipmasterlist.txt" # 403 Client Error: Forbidden
+    autoshun = "http://www.autoshun.org/files/shunlist.csv"
 '''
 
 HEADERS = {
@@ -34,22 +37,16 @@ file_path = os.environ['HOME']+"/dev/output/threat_sources/"
 output_file = os.environ['HOME']+"/dev/output/threats.csv"
 output_dir = os.environ['HOME']+"/dev/output/"
 
-#Domains
-domain_path = os.environ['HOME']+"/dev/output/threat_domains/"
-domain_output = os.environ['HOME']+"/dev/output/threat_domains.csv"
-
 #AlienVault
 alien = "https://reputation.alienvault.com/reputation.generic"
 
 #Abuse.ch
-zeus = "https://zeustracker.abuse.ch/blocklist.php?download=ipblocklist"
 palevo = "https://palevotracker.abuse.ch/blocklists.php?download=ipblocklist"
 feodo = "https://feodotracker.abuse.ch/blocklist/?download=ipblocklist"
 
 #Emerging Threats
 ethreat_blockedIP =        "http://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt"
 ethreat_compromisedIP =    "http://rules.emergingthreats.net/blockrules/compromised-ips.txt"
-ethreat_RBN_malvertisers = "http://doc.emergingthreats.net/pub/Main/RussianBusinessNetwork/emerging-rbn-malvertisers.txt"
 
 #Malc0de Black List
 malcode = "http://malc0de.com/bl/IP_Blacklist.txt"
@@ -73,36 +70,26 @@ danger_rules = "http://danger.rulez.sk/projects/bruteforceblocker/blist.php"
 #SANS
 sans_ip = "https://isc.sans.edu/ipsascii.html"
 
-#autoshun.org
-autoshun = "http://www.autoshun.org/files/shunlist.csv"
-
 #charles.the-haleys.org -- SSH dictionary attack
 ssh_dict_attack = "http://charles.the-haleys.org/ssh_dico_attack_hdeny_format.php/hostsdeny.txt"
 
 #TOR  nodes
 tor_exit_nodes = "https://check.torproject.org/exit-addresses"
 
-#osint.bambenekconuslting.com
-osint_iplist = "http://osint.bambenekconsulting.com/feeds/c2-ipmasterlist.txt"
-
 
 open_source_threat_intel = {
     "AlienVault_blacklist":alien,
-    "malc0de_blacklist":malcode, 
-    "palevo_ip_blacklist":palevo,  
-    "zeus_tracker_ip_blacklist":zeus,
+    "malc0de_blacklist":malcode,
+    "palevo_ip_blacklist":palevo,
     "feodo_black_list":feodo,
     "emerging_threats_compromised_ips":ethreat_compromisedIP,
-    "emerging_threats_malvertisers":ethreat_RBN_malvertisers,
     "noThink_SSH_blacklist":ntSSH,
     "noThink_Telnet_blacklist":ntTelnet,
     "ci_army":ci_army,
     "danger_rules":danger_rules,
     "isc_SANS":sans_ip,
-    "autoshun":autoshun,
     "ssh_bruteforce":ssh_dict_attack,
-    "tor_exit_nodes":tor_exit_nodes,
-    "osint_iplist":osint_iplist
+    "tor_exit_nodes":tor_exit_nodes
     }
 
 # Regular expression for IPv4 Addresses
@@ -144,18 +131,18 @@ def createCSV(source_path, directory, oFile, header):
     ''' Create a two column csv file with threat and source for the columns '''
     # Make sure the directory is mounted
     if not os.path.isdir(directory):
-        print "\t [-] Output directory does not exist or is not mounted\n"
+        print ("\t [-] Output directory does not exist or is not mounted\n")
         sys.exit()
 
     # copy old file for diff--then remove to create new file
     if os.path.isfile(oFile):
         shutil.copyfile(oFile, oFile+".old")
         os.remove(oFile)
-    
+
     # create header for first line
     f = open(oFile, 'w+')
     f.write(header)
-    
+
     for hFile in os.listdir(source_path):
         with open(source_path+hFile) as infile:
             for line in infile:
@@ -163,10 +150,23 @@ def createCSV(source_path, directory, oFile, header):
     f.close()
 
 def main():
+    # check to see if needed directories exist. If not, create them
+    if os.path.isdir(file_path):
+        pass
+    else:
+        print("[+] Creating directory: " + file_path)
+        os.makedirs(file_path)
+
+    if os.path.isdir(output_dir):
+        pass
+    else:
+        print("[+] Creating output directory: " + output_dir)
+        os.makedirs(output_dir)
+
     # Loop through open source threat intelligence sources
     # Pull them down from the interwebs and format them
     # Write them to file.
-    for filename, source in open_source_threat_intel.iteritems():
+    for filename, source in open_source_threat_intel.items():
         print("[+] Grabbing: " + source)
         threat_list=urlgrab(source, ip)
         writeToFile(file_path, threat_list, filename)
@@ -174,9 +174,6 @@ def main():
     # Create CSV
     print("[+] Creating CSV. . .\n")
     createCSV(file_path, output_dir, output_file, "IP,Threat_Feed\n")
-
-    # Now lets create a domain blacklist -- sources are handled by bash script
-    createCSV(domain_path, output_dir, domain_output, "Domain, Threat_Feed\n")
 
 if __name__ == "__main__":
     main()
