@@ -26,6 +26,7 @@ import shutil
     http://doc.emergingthreats.net/pub/Main/RussianBusinessNetwork/emerging-rbn-malvertisers.txt"
     osint_iplist = "http://osint.bambenekconsulting.com/feeds/c2-ipmasterlist.txt" # 403 Client Error: Forbidden
     autoshun = "http://www.autoshun.org/files/shunlist.csv"
+    palevo = "https://palevotracker.abuse.ch/blocklists.php?download=ipblocklist"
 '''
 
 HEADERS = {
@@ -33,15 +34,22 @@ HEADERS = {
 }
 
 #IPs
-file_path = os.environ['HOME']+"/dev/output/threat_sources/"
-output_file = os.environ['HOME']+"/dev/output/threats.csv"
-output_dir = os.environ['HOME']+"/dev/output/"
+if sys.platform == "win32":
+    file_path = os.environ['HOMEPATH']+"/dev/output/threat_sources/"
+    output_file = os.environ['HOMEPATH']+"/dev/output/threats.csv"
+    output_dir = os.environ['HOMEPATH']+"/dev/output/"
+else:
+    file_path = os.environ['HOME']+"/dev/output/threat_sources/"
+    output_file = os.environ['HOME']+"/dev/output/threats.csv"
+    output_dir = os.environ['HOME']+"/dev/output/"
+
+
+
 
 #AlienVault
 alien = "https://reputation.alienvault.com/reputation.generic"
 
 #Abuse.ch
-palevo = "https://palevotracker.abuse.ch/blocklists.php?download=ipblocklist"
 feodo = "https://feodotracker.abuse.ch/blocklist/?download=ipblocklist"
 
 #Emerging Threats
@@ -80,7 +88,6 @@ tor_exit_nodes = "https://check.torproject.org/exit-addresses"
 open_source_threat_intel = {
     "AlienVault_blacklist":alien,
     "malc0de_blacklist":malcode,
-    "palevo_ip_blacklist":palevo,
     "feodo_black_list":feodo,
     "emerging_threats_compromised_ips":ethreat_compromisedIP,
     "noThink_SSH_blacklist":ntSSH,
@@ -172,7 +179,7 @@ def main():
         writeToFile(file_path, threat_list, filename)
 
     # Create CSV
-    print("[+] Creating CSV. . .\n")
+    print(f'[+] Creating CSV {output_file}...\n')
     createCSV(file_path, output_dir, output_file, "IP,Threat_Feed\n")
 
 if __name__ == "__main__":
